@@ -17,17 +17,7 @@ import java.util.HashMap;
 @RequestMapping("/users")
 public class UserController {
     private final HashMap<Integer, User> users = new HashMap<>();
-
-    private void validateUser(User user) {
-        if (user.getLogin().contains(" ")) {
-            log.warn("Логин не может содержать пробелы");
-            throw new ValidationException("Логин не может содержать пробелы");
-        }
-
-        if (user.getName() == null) {
-            user.setName(user.getLogin());
-        }
-    }
+    private int currentId = 0;
 
     @GetMapping
     public ArrayList<User> getAllUsers() {
@@ -37,7 +27,7 @@ public class UserController {
     @PostMapping
     public User createUser(@Valid @RequestBody User user) {
         if (user.getId() == null) {
-            user.setId(++User.currentId);
+            user.setId(generateId());
         }
 
         validateUser(user);
@@ -61,5 +51,20 @@ public class UserController {
 
         log.info("Обновлён пользователь: " + user);
         return user;
+    }
+
+    private int generateId() {
+        return ++currentId;
+    }
+
+    private void validateUser(User user) {
+        if (user.getLogin().contains(" ")) {
+            log.warn("Логин не может содержать пробелы");
+            throw new ValidationException("Логин не может содержать пробелы");
+        }
+
+        if (user.getName() == null) {
+            user.setName(user.getLogin());
+        }
     }
 }

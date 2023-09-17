@@ -15,14 +15,8 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
+    private int currentId = 0;
     private final HashMap<Integer, Film> films = new HashMap<>();
-
-    private void validateFilm(Film film) {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Дата выхода фильма должна быть не раньше 28.12.1895");
-            throw new ValidationException("Дата выхода фильма должна быть не раньше 28.12.1895");
-        }
-    }
 
     @GetMapping
     public ArrayList<Film> getAllFilms() {
@@ -32,7 +26,7 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
         if (film.getId() == null) {
-            film.setId(++Film.currentId);
+            film.setId(generateId());
         }
 
         validateFilm(film);
@@ -55,5 +49,16 @@ public class FilmController {
         films.put(film.getId(), film);
         log.info("Обновлён фильм: " + film);
         return film;
+    }
+
+    private int generateId() {
+        return ++currentId;
+    }
+
+    private void validateFilm(Film film) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.warn("Дата выхода фильма должна быть не раньше 28.12.1895");
+            throw new ValidationException("Дата выхода фильма должна быть не раньше 28.12.1895");
+        }
     }
 }

@@ -7,8 +7,6 @@ import java.time.LocalDate;
 
 @Data
 public class Film {
-    public static int currentId = 0;
-
     private Integer id;
 
     @NotBlank
