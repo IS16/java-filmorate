@@ -10,7 +10,10 @@ public interface FilmStorage {
     HashMap<Integer, Film> films = null;
 
     public ArrayList<Film> getAllFilms();
+
     public Film getFilmById(int filmId);
+
     public Film addFilm(Film film);
+
     public Film updateFilm(Film film);
 }
