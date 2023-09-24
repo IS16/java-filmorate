@@ -10,7 +10,10 @@ public interface UserStorage {
     HashMap<Integer, User> users = null;
 
     public ArrayList<User> getAllUsers();
+
     public User getUserById(int id);
+
     public User createUser(User user);
+
     public User updateUser(User user);
 }
