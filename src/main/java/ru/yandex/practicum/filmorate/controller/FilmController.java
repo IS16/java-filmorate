@@ -22,7 +22,7 @@ public class FilmController {
         this.storage = storage;
         this.service = service;
     }
-    
+
     @GetMapping
     public ArrayList<Film> getAllFilms() {
         return storage.getAllFilms();
