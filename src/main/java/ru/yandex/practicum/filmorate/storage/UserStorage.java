@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface UserStorage {
-    int currentId = 0;
-    HashMap<Integer, User> users = null;
-
     public ArrayList<User> getAllUsers();
 
     public User getUserById(int id);

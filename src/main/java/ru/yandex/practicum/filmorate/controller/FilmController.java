@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -14,34 +13,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private FilmStorage storage;
     private FilmService service;
 
     @Autowired
-    FilmController(FilmStorage storage, FilmService service) {
-        this.storage = storage;
+    FilmController(FilmService service) {
         this.service = service;
     }
 
     @GetMapping
     public ArrayList<Film> getAllFilms() {
-        return storage.getAllFilms();
+        return service.getAllFilms();
     }
 
     @GetMapping("/{id}")
     public Film getFilmById(@PathVariable int id) {
-        return storage.getFilmById(id);
+        return service.getFilmById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Film addFilm(@Valid @RequestBody Film film) {
-        return storage.addFilm(film);
+        return service.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
-        return storage.updateFilm(film);
+        return service.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")

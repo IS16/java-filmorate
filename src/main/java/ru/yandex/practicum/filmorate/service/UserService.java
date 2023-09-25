@@ -21,6 +21,22 @@ public class UserService {
         this.storage = storage;
     }
 
+    public ArrayList<User> getAllUsers() {
+        return storage.getAllUsers();
+    }
+
+    public User getUserById(int id) {
+        return storage.getUserById(id);
+    }
+
+    public User createUser(User user) {
+        return storage.createUser(user);
+    }
+
+    public User updateUser(User user) {
+        return storage.updateUser(user);
+    }
+
     public void addFriend(int userId, int friendId) {
         User user1 = storage.getUserById(userId);
         User user2 = storage.getUserById(friendId);

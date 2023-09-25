@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.LikeNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +33,22 @@ public class FilmService {
     @Autowired
     public FilmService(FilmStorage storage) {
         this.storage = storage;
+    }
+
+    public ArrayList<Film> getAllFilms() {
+        return storage.getAllFilms();
+    }
+
+    public Film getFilmById(int id) {
+        return storage.getFilmById(id);
+    }
+
+    public Film addFilm(Film film) {
+        return storage.addFilm(film);
+    }
+
+    public Film updateFilm(Film film) {
+        return storage.updateFilm(film);
     }
 
     public void addLike(int filmId, int userId) {
