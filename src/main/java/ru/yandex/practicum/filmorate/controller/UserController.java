@@ -1,70 +1,66 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 @Slf4j
 @Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final HashMap<Integer, User> users = new HashMap<>();
-    private int currentId = 0;
+    private UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ArrayList<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return service.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable int id) {
+        return service.getUserById(id);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user) {
-        if (user.getId() == null) {
-            user.setId(generateId());
-        }
-
-        validateUser(user);
-
-        users.put(user.getId(), user);
-
-        log.info("Добавлен пользователь: " + user + ". Количество пользователей: " + users.size());
-        return user;
+        return service.createUser(user);
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) throws Exception {
-        if (!users.containsKey(user.getId())) {
-            log.warn(String.format("Пользователь с данным ID (id = %d) не найден", user.getId()));
-            throw new EntityNotFoundException(String.format("Пользователь с данным ID (id = %d) не найден", user.getId()));
-        }
-
-        validateUser(user);
-
-        users.put(user.getId(), user);
-
-        log.info("Обновлён пользователь: " + user);
-        return user;
+    public User updateUser(@Valid @RequestBody User user) {
+        return service.updateUser(user);
     }
 
-    private int generateId() {
-        return ++currentId;
+    @GetMapping("/{id}/friends")
+    public ArrayList<User> getFriends(@PathVariable int id) {
+        return service.getFriends(id);
     }
 
-    private void validateUser(User user) {
-        if (user.getLogin().contains(" ")) {
-            log.warn("Логин не может содержать пробелы");
-            throw new ValidationException("Логин не может содержать пробелы");
-        }
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
+        service.addFriend(id, friendId);
+    }
 
-        if (user.getName() == null) {
-            user.setName(user.getLogin());
-        }
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+        service.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ArrayList<User> commonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return service.getCommonFriends(id, otherId);
     }
 }
