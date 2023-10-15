@@ -128,8 +128,8 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public ArrayList<Integer> getLikesByFilm(int film_id) {
-        SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT * FROM likes WHERE film_id = ?", film_id);
+    public ArrayList<Integer> getLikesByFilm(int filmId) {
+        SqlRowSet likeRows = jdbcTemplate.queryForRowSet("SELECT * FROM likes WHERE film_id = ?", filmId);
 
         ArrayList<Integer> likes = new ArrayList<>();
 
@@ -141,19 +141,19 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public void addLike(int film_id, int user_id) {
+    public void addLike(int filmId, int userId) {
         String sqlQuery = "INSERT INTO likes (film_id, user_id) VALUES (?, ?)";
 
         jdbcTemplate.update(sqlQuery,
-                film_id,
-                user_id
+                filmId,
+                userId
         );
     }
 
     @Override
-    public void deleteLike(int film_id, int user_id) {
+    public void deleteLike(int filmId, int userId) {
         String sqlQuery = "DELETE FROM likes WHERE film_id = ? AND user_id = ?";
-        jdbcTemplate.update(sqlQuery, film_id, user_id);
+        jdbcTemplate.update(sqlQuery, filmId, userId);
     }
 
     @Override
@@ -169,12 +169,12 @@ public class FilmDaoImpl implements FilmDao {
         return films;
     }
 
-    private void addNewGenresToFilm(int film_id, ArrayList<Genre> genres) {
+    private void addNewGenresToFilm(int filmId, ArrayList<Genre> genres) {
         for (Genre item : genres) {
             String sqlQuery1 = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
 
             jdbcTemplate.update(sqlQuery1,
-                    film_id,
+                    filmId,
                     item.getId()
             );
         }

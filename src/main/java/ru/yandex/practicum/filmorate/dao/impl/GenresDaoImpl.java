@@ -50,8 +50,8 @@ public class GenresDaoImpl implements GenreDao {
     }
 
     @Override
-    public ArrayList<Genre> getFilmGenres(int film_id) {
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM film_genre WHERE film_id = ?", film_id);
+    public ArrayList<Genre> getFilmGenres(int filmId) {
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet("SELECT * FROM film_genre WHERE film_id = ?", filmId);
 
         ArrayList<Genre> genres = new ArrayList<>();
 
