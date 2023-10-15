@@ -24,6 +24,14 @@ public class User {
     @PastOrPresent
     private final LocalDate birthday;
 
+    public User(int id, String email, String login, String name, LocalDate birthday) {
+        this.id = id;
+        this.email = email;
+        this.login = login;
+        this.name = name;
+        this.birthday = birthday;
+    }
+
     private Set<Integer> friends = new HashSet<>();
 
     public void addFriend(int id) {
