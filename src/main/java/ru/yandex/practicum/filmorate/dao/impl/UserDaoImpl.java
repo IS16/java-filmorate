@@ -21,7 +21,7 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDaoImpl(JdbcTemplate jdbcTemplate){
+    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
     public Optional<User> findUserById(int id) {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT * FROM users WHERE id = ?", id);
 
-        if(userRows.next()) {
+        if (userRows.next()) {
             User user = new User(
                 userRows.getInt("id"),
                 userRows.getString("email"),
