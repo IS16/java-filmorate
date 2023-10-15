@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface MpaStorage {
     public ArrayList<Rate> getAllRates();
+
     public Rate getRateById(int id);
 }

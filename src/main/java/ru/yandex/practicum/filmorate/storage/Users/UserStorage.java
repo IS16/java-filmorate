@@ -15,7 +15,10 @@ public interface UserStorage {
     public User updateUser(User user);
 
     public boolean isFriend(User user, User friend);
+
     public void addFriend(User user, User friend);
+
     public void deleteFriend(User user, User friend);
+
     public HashMap<Integer, User> getFriends(User user);
 }

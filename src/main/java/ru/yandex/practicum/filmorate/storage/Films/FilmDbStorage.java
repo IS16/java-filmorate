@@ -57,17 +57,17 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    public ArrayList<Integer> getLikesByFilm(int film_id) {
-        return filmDao.getLikesByFilm(film_id);
+    public ArrayList<Integer> getLikesByFilm(int filmId) {
+        return filmDao.getLikesByFilm(filmId);
     }
 
     @Override
-    public void addLike(int film_id, int user_id) {
-        filmDao.addLike(film_id, user_id);
+    public void addLike(int filmId, int userId) {
+        filmDao.addLike(filmId, userId);
     }
 
-    public void deleteLike(int film_id, int user_id) {
-        filmDao.deleteLike(film_id, user_id);
+    public void deleteLike(int filmId, int userId) {
+        filmDao.deleteLike(filmId, userId);
     }
 
     @Override

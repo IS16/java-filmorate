@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface GenresStorage {
     public ArrayList<Genre> getAllGenres();
+
     public Genre getGenreById(int id);
 }
