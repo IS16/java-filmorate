@@ -44,15 +44,15 @@ public class FilmDaoImpl implements FilmDao {
         HashMap<Integer, Genre> genresMap = new HashMap<>();
         genreDao.getAllGenres().forEach(item -> genresMap.put(item.getId(), item));
 
-        HashMap<Integer, ArrayList<Genre>> film_genres = new HashMap<>();
+        HashMap<Integer, ArrayList<Genre>> filmGenres = new HashMap<>();
 
         SqlRowSet filmGenreRows = jdbcTemplate.queryForRowSet("SELECT * FROM film_genre");
         while (filmGenreRows.next()) {
-            if (!film_genres.containsKey(filmGenreRows.getInt("film_id"))) {
-                film_genres.put(filmGenreRows.getInt("film_id"), new ArrayList<>());
+            if (!filmGenres.containsKey(filmGenreRows.getInt("film_id"))) {
+                filmGenres.put(filmGenreRows.getInt("film_id"), new ArrayList<>());
             }
 
-            film_genres.get(filmGenreRows.getInt("film_id")).add(genresMap.get(filmGenreRows.getInt("genre_id")));
+            filmGenres.get(filmGenreRows.getInt("film_id")).add(genresMap.get(filmGenreRows.getInt("genre_id")));
         }
 
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM films");
@@ -61,7 +61,7 @@ public class FilmDaoImpl implements FilmDao {
 
         while (filmRows.next()) {
 
-            ArrayList<Genre> genres = film_genres.get(filmRows.getInt("id")) == null ? new ArrayList<>() : film_genres.get(filmRows.getInt("id"));
+            ArrayList<Genre> genres = filmGenres.get(filmRows.getInt("id")) == null ? new ArrayList<>() : filmGenres.get(filmRows.getInt("id"));
 
             films.add(new Film(
                 filmRows.getInt("id"),

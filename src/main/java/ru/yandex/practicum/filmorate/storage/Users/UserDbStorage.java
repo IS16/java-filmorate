@@ -85,6 +85,7 @@ public class UserDbStorage implements UserStorage {
 
         if (user.getName() == null) {
             user.setName(user.getLogin());
+            log.info("Имя не указано. Используем логин: " + user);
         }
     }
 }
