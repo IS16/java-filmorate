@@ -2,14 +2,15 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.AlreadyFriendsException;
 import ru.yandex.practicum.filmorate.exception.NotFriendsException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.Users.UserStorage;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.HashMap;
 
 @Service
 @Slf4j
@@ -17,7 +18,7 @@ public class UserService {
     private UserStorage storage;
 
     @Autowired
-    public UserService(UserStorage storage) {
+    public UserService(@Qualifier("UserDbStorage") UserStorage storage) {
         this.storage = storage;
     }
 
@@ -41,12 +42,11 @@ public class UserService {
         User user1 = storage.getUserById(userId);
         User user2 = storage.getUserById(friendId);
 
-        if (user1.getFriends().contains(friendId)) {
+        if (storage.isFriend(user1, user2)) {
             throw new AlreadyFriendsException(String.format("Пользователи с id = %d и id = %d уже являются друзьями", userId, friendId));
         }
 
-        user1.addFriend(friendId);
-        user2.addFriend(userId);
+        storage.addFriend(user1, user2);
 
         log.info("Пользователи " + user1 + " и " + user2 + " стали друзьями");
     }
@@ -55,35 +55,31 @@ public class UserService {
         User user1 = storage.getUserById(userId);
         User user2 = storage.getUserById(friendId);
 
-        if (!user1.getFriends().contains(friendId)) {
+        if (!storage.isFriend(user1, user2)) {
             throw new NotFriendsException(String.format("Пользователи с id = %d и id = %d не являются друзьями", userId, friendId));
         }
 
-        user1.deleteFriend(friendId);
-        user2.deleteFriend(userId);
+        storage.deleteFriend(user1, user2);
 
         log.info("Пользователь " + user1 + " удалил из друзей " + user2);
     }
 
     public ArrayList<User> getFriends(int userId) {
-        Set<Integer> friends = storage.getUserById(userId).getFriends();
-
-        ArrayList<User> users = new ArrayList<>();
-
-        friends.forEach(item -> users.add(storage.getUserById(item)));
-
-        return users;
+        return new ArrayList<>(storage.getFriends(getUserById(userId)).values());
     }
 
     public ArrayList<User> getCommonFriends(int userId, int friendId) {
         User user1 = storage.getUserById(userId);
         User user2 = storage.getUserById(friendId);
 
+        HashMap<Integer, User> user1Friends = storage.getFriends(user1);
+        HashMap<Integer, User> user2Friends = storage.getFriends(user2);
+
         ArrayList<User> users = new ArrayList<>();
 
-        user1.getFriends().forEach(item -> {
-            if (user2.getFriends().contains(item)) {
-                users.add(storage.getUserById(item));
+        storage.getFriends(user1).keySet().forEach(item -> {
+            if (user2Friends.containsKey(item)) {
+                users.add(user1Friends.get(item));
             }
         });
 

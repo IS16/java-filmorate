@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.Users;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -8,9 +8,10 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 @Slf4j
-@Component
+@Component("InMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     private final HashMap<Integer, User> users = new HashMap<>();
     private int currentId = 0;
@@ -22,7 +23,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User createUser(User user) {
         validateUser(user);
 
-        if (user.getId() == null) {
+        if (user.getId() == 0) {
             user.setId(generateId());
         }
 
@@ -57,6 +58,34 @@ public class InMemoryUserStorage implements UserStorage {
 
         log.info("Обновлён пользователь: " + user);
         return user;
+    }
+
+    @Override
+    public boolean isFriend(User user, User friend) {
+        return user.getFriends().contains(friend.getId());
+    }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) добавил в друзья пользователя (id = %d)", user.getId(), friend.getId()));
+        user.addFriend(friend.getId());
+    }
+
+    @Override
+    public void deleteFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) удалил из друзей пользователя (id = %d)", user.getId(), friend.getId()));
+        user.deleteFriend(friend.getId());
+    }
+
+    @Override
+    public HashMap<Integer, User> getFriends(User user) {
+        Set<Integer> friends = user.getFriends();
+
+        HashMap<Integer, User> users = new HashMap<>();
+
+        friends.forEach(item -> users.put(item, getUserById(item)));
+
+        return users;
     }
 
     private int generateId() {

@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.model.ErrorResponse;
 
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler({UserNotFoundException.class, FilmNotFoundException.class, NotFriendsException.class, LikeNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, FilmNotFoundException.class, NotFriendsException.class, LikeNotFoundException.class, RateNotFoundException.class, GenreNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final RuntimeException  e) {
         return new ErrorResponse(e.getMessage());

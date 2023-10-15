@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.Films;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -7,14 +7,25 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@Component
+@Component("InMemoryFilmStorage")
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private int currentId = 0;
     private final HashMap<Integer, Film> films = new HashMap<>();
+
+    private final Comparator<Film> filmsComparator = new Comparator<Film>() {
+        @Override
+        public int compare(Film o1, Film o2) {
+            if (Objects.equals(o1.getId(), o2.getId())) {
+                return 0;
+            }
+
+            return o2.getLikes().size() - o1.getLikes().size();
+        }
+    };
 
     public ArrayList<Film> getAllFilms() {
         return new ArrayList<>(films.values());
@@ -32,7 +43,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film addFilm(Film film) {
         validateFilm(film);
 
-        if (film.getId() == null) {
+        if (film.getId() == 0) {
             film.setId(generateId());
         }
 
@@ -54,6 +65,32 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.put(film.getId(), film);
         log.info("Обновлён фильм: " + film);
         return film;
+    }
+
+    @Override
+    public ArrayList<Integer> getLikesByFilm(int filmId) {
+        log.info(String.format("Получаем информацию о лайках к фильму (id = %d)", filmId));
+        return new ArrayList<>(films.get(filmId).getLikes());
+    }
+
+    @Override
+    public void addLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) поставил лайк фильму (id = %d)", userId, filmId));
+        films.get(filmId).addLike(userId);
+    }
+
+    @Override
+    public void deleteLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) удалил свой лайк у фильма (id = %d)", userId, filmId));
+        films.get(filmId).deleteLike(userId);
+    }
+
+    @Override
+    public List<Film> getPopularFilms(int count) {
+        return getAllFilms().stream()
+                .sorted(filmsComparator)
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     private int generateId() {
