@@ -72,14 +72,14 @@ public class UserService {
         User user1 = storage.getUserById(userId);
         User user2 = storage.getUserById(friendId);
 
-        HashMap<Integer, User> user1_friends = storage.getFriends(user1);
-        HashMap<Integer, User> user2_friends = storage.getFriends(user2);
+        HashMap<Integer, User> user1Friends = storage.getFriends(user1);
+        HashMap<Integer, User> user2Friends = storage.getFriends(user2);
 
         ArrayList<User> users = new ArrayList<>();
 
         storage.getFriends(user1).keySet().forEach(item -> {
-            if (user2_friends.containsKey(item)) {
-                users.add(user1_friends.get(item));
+            if (user2Friends.containsKey(item)) {
+                users.add(user1Friends.get(item));
             }
         });
 
