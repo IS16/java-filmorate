@@ -69,16 +69,19 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public ArrayList<Integer> getLikesByFilm(int filmId) {
+        log.info(String.format("Получаем информацию о лайках к фильму (id = %d)", filmId));
         return new ArrayList<>(films.get(filmId).getLikes());
     }
 
     @Override
     public void addLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) поставил лайк фильму (id = %d)", userId, filmId));
         films.get(filmId).addLike(userId);
     }
 
     @Override
     public void deleteLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) удалил свой лайк у фильма (id = %d)", userId, filmId));
         films.get(filmId).deleteLike(userId);
     }
 

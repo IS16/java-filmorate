@@ -67,11 +67,13 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) добавил в друзья пользователя (id = %d)", user.getId(), friend.getId()));
         user.addFriend(friend.getId());
     }
 
     @Override
     public void deleteFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) удалил из друзей пользователя (id = %d)", user.getId(), friend.getId()));
         user.deleteFriend(friend.getId());
     }
 

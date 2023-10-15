@@ -58,15 +58,18 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public ArrayList<Integer> getLikesByFilm(int filmId) {
+        log.info(String.format("Получаем информацию о лайках к фильму (id = %d)", filmId));
         return filmDao.getLikesByFilm(filmId);
     }
 
     @Override
     public void addLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) поставил лайк фильму (id = %d)", userId, filmId));
         filmDao.addLike(filmId, userId);
     }
 
     public void deleteLike(int filmId, int userId) {
+        log.info(String.format("Пользователь (id = %d) удалил свой лайк у фильма (id = %d)", userId, filmId));
         filmDao.deleteLike(filmId, userId);
     }
 

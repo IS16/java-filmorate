@@ -51,15 +51,18 @@ public class UserDbStorage implements UserStorage {
         getUserById(user.getId());
         validateUser(user);
 
+        log.info("Обновлён пользователь: " + user);
         return userDao.updateUser(user);
     }
 
     public void addFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) добавил в друзья пользователя (id = %d)", user.getId(), friend.getId()));
         userDao.addFriend(user, friend);
     }
 
     @Override
     public void deleteFriend(User user, User friend) {
+        log.info(String.format("Пользователь (id = %d) удалил из друзей пользователя (id = %d)", user.getId(), friend.getId()));
         userDao.deleteFriend(user, friend);
     }
 
@@ -70,6 +73,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     public HashMap<Integer, User> getFriends(User user) {
+        log.info(String.format("Получение списка друзей пользователя (id = %d)", user.getId()));
         return userDao.getUserFriends(user);
     }
 

@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,11 +41,27 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public ArrayList<Film> getAllFilms() {
+        HashMap<Integer, Genre> genresMap = new HashMap<>();
+        genreDao.getAllGenres().forEach(item -> genresMap.put(item.getId(), item));
+
+        HashMap<Integer, ArrayList<Genre>> film_genres = new HashMap<>();
+
+        SqlRowSet filmGenreRows = jdbcTemplate.queryForRowSet("SELECT * FROM film_genre");
+        while (filmGenreRows.next()) {
+            if (!film_genres.containsKey(filmGenreRows.getInt("film_id"))) {
+                film_genres.put(filmGenreRows.getInt("film_id"), new ArrayList<>());
+            }
+
+            film_genres.get(filmGenreRows.getInt("film_id")).add(genresMap.get(filmGenreRows.getInt("genre_id")));
+        }
+
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM films");
 
         ArrayList<Film> films = new ArrayList<>();
 
         while (filmRows.next()) {
+
+            ArrayList<Genre> genres = film_genres.get(filmRows.getInt("id")) == null ? new ArrayList<>() : film_genres.get(filmRows.getInt("id"));
 
             films.add(new Film(
                 filmRows.getInt("id"),
@@ -53,7 +70,7 @@ public class FilmDaoImpl implements FilmDao {
                 filmRows.getDate("releaseDate").toLocalDate(),
                 filmRows.getInt("duration"),
                 rateDao.findRateById(filmRows.getInt("rate_id")).get(),
-                genreDao.getFilmGenres(filmRows.getInt("id"))
+                genres
             ));
         }
 
