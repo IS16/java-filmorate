@@ -9,12 +9,20 @@ import java.util.Optional;
 
 public interface FilmDao {
     Optional<Rate> findRateById(int id);
+
     ArrayList<Film> getAllFilms();
+
     Optional<Film> findFilmById(int id);
+
     Film createFilm(Film film);
+
     Film updateFilm(Film film);
+
     ArrayList<Integer> getLikesByFilm(int filmId);
-    void addLike(int film_id, int userId);
-    void deleteLike(int film_id, int userId);
+
+    void addLike(int filmId, int userId);
+
+    void deleteLike(int filmId, int userId);
+
     List<Film> getPopularFilms(int count);
 }

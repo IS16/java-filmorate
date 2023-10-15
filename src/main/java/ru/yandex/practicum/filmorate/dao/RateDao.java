@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface RateDao {
     Optional<Rate> findRateById(int id);
+
     ArrayList<Rate> getAllRates();
 }
